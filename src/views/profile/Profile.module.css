@@ -1,0 +1,26 @@
+.Profile {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.Profile p {
+  color: white;
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+
+.Profile h1 {
+
+  color: white;
+}
+
+.ProfileContainer {
+  flex: 1;
+  color: white;
+}
+
+.ProfileLoading {
+  color: white;
+  margin-top: 20px;
+}

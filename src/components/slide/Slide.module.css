@@ -1,0 +1,53 @@
+.slide {
+  background-image: url('./bank-tree.jpeg');
+  background-position: 0 -50px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #FFF;
+  height: 300px;
+  position: relative;
+}
+
+.slide_content {
+  position: relative;
+  top: 2rem;
+  width: 200px;
+  background: white;
+  padding: 2rem;
+  text-align: left;
+  margin: 0 auto;
+}
+
+.slide_content p:not(:last-child) {
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.slide_content p:last-child {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 920px) {
+  .slide {
+    height: 400px;
+    background-position: 0 33%;
+  }
+
+  .slide_content {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    width: 300px;
+    margin: 2rem;
+  }
+
+  .slide_content p:not(:last-child) {
+    font-size: 1.5rem;
+  }
+
+  .slide_content p:last-child {
+    font-size: 1.2rem;
+  }
+}

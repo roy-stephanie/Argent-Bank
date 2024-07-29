@@ -1,0 +1,232 @@
+openapi: 3.0.1
+info:
+  title: Finance Management API
+  description: API pour gérer les opérations financières des utilisateurs
+  version: 1.0.1
+servers:
+  - url: http://localhost/api
+paths:
+  /operations:
+    get:
+      summary: Visualiser toutes les opérations pour le mois en cours, groupées par compte
+      description: Retourne toutes les opérations de l'utilisateur pour le mois en cours, groupées par compte
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: month
+          in: query
+          required: true
+          description: Mois pour lequel récupérer les opérations (format MM)
+          schema:
+            type: string
+            example: '07'
+        - name: year
+          in: query
+          required: true
+          description: Année pour laquelle récupérer les opérations (format YYYY)
+          schema:
+            type: string
+            example: '2024'
+      responses:
+        '200':
+          description: Liste des opérations récupérées avec succès, groupées par compte
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Operation'
+              examples:
+                example1:
+                  summary: Opérations groupées par compte
+                  value:
+                    account1:
+                      - id: '1'
+                        accountId: 'account1'
+                        date: '2024-07-15T14:30:00Z'
+                        amount: 100.00
+                        description: 'Paiement de facture'
+                    account2:
+                      - id: '2'
+                        accountId: 'account2'
+                        date: '2024-07-16T10:00:00Z'
+                        amount: 50.50
+                        description: 'Achat supermarché'
+        '401':
+          description: Non autorisé
+        '500':
+          description: Erreur interne du serveur
+  /operations/{id}:
+    get:
+      summary: Visualiser les détails d'une opération
+      description: Retourne les détails d'une opération spécifique
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de l'opération
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: Détails de l'opération récupérés avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+              examples:
+                example1:
+                  summary: Détails de l'opération
+                  value:
+                    id: '1'
+                    accountId: 'account1'
+                    date: '2024-07-15T14:30:00Z'
+                    amount: 100.00
+                    description: 'Paiement de facture'
+        '401':
+          description: Non autorisé
+        '404':
+          description: Opération non trouvée
+        '500':
+          description: Erreur interne du serveur
+    post:
+      summary: Ajouter des informations sur une opération
+      description: Ajoute des informations sur une opération spécifique
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de l'opération
+          schema:
+            type: string
+            example: '1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationInfo'
+            examples:
+              example1:
+                summary: Informations sur l'opération
+                value:
+                  notes: 'Réception de paiement'
+      responses:
+        '201':
+          description: Informations ajoutées avec succès
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Non autorisé
+        '500':
+          description: Erreur interne du serveur
+    put:
+      summary: Modifier les informations d'une opération
+      description: Modifie les informations d'une opération spécifique
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de l'opération
+          schema:
+            type: string
+            example: '1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationInfo'
+            examples:
+              example1:
+                summary: Modification des informations sur l'opération
+                value:
+                  notes: 'Réception de paiement ajusté'
+      responses:
+        '200':
+          description: Informations modifiées avec succès
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Non autorisé
+        '404':
+          description: Opération non trouvée
+        '500':
+          description: Erreur interne du serveur
+    delete:
+      summary: Supprimer les informations d'une opération
+      description: Supprime les informations d'une opération spécifique
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de l'opération
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '204':
+          description: Informations supprimées avec succès
+        '401':
+          description: Non autorisé
+        '404':
+          description: Opération non trouvée
+        '500':
+          description: Erreur interne du serveur
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Operation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID de l'opération
+        accountId:
+          type: string
+          description: ID du compte associé à l'opération
+        date:
+          type: string
+          format: date-time
+          description: Date et heure de l'opération
+        amount:
+          type: number
+          description: Montant de l'opération
+        description:
+          type: string
+          description: Description de l'opération
+      required:
+        - accountId
+        - date
+        - amount
+        - description
+      example:
+        id: '1'
+        accountId: 'account1'
+        date: '2024-07-15T14:30:00Z'
+        amount: 100.00
+        description: 'Paiement de facture'
+    OperationInfo:
+      type: object
+      properties:
+        notes:
+          type: string
+          description: Notes supplémentaires sur l'opération
+      example:
+        notes: 'Réception de paiement'
